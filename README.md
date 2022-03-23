@@ -4,7 +4,7 @@ This is a library for go to connect to Azure Storage for the type of Block Blob,
 
 ## Installation
 
-`go get -u gitlab.todcoe.com/library-go/azurestorage`
+`go get -u github.com/mdandyf/AzureStorage.git`
 
 ## Quick Start
 
