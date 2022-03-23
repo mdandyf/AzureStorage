@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"log"
 	"net/url"
 
 	"github.com/Azure/azure-storage-blob-go/azblob"
@@ -104,7 +103,7 @@ func DeleteBlob(containerURL azblob.ContainerURL, blobName *string) error {
 	return nil
 }
 
-func GetListBlob(containerURL azblob.ContainerURL) [][]azblob.BlobItemInternal {
+func GetListBlob(containerURL azblob.ContainerURL) ([][]azblob.BlobItemInternal, error) {
 	var results [][]azblob.BlobItemInternal
 
 	// List the blob(s) in our container; since a container may hold millions of blobs, this is done 1 segment at a time.
@@ -112,7 +111,7 @@ func GetListBlob(containerURL azblob.ContainerURL) [][]azblob.BlobItemInternal {
 		// Get a result segment starting with the blob indicated by the current Marker.
 		listBlob, err := containerURL.ListBlobsFlatSegment(ctx, marker, azblob.ListBlobsSegmentOptions{})
 		if err != nil {
-			log.Fatal(err)
+			return nil, err
 		}
 		// IMPORTANT: ListBlobs returns the start of the next segment; you MUST use this to get
 		// the next segment (after processing the current result segment).
@@ -126,5 +125,5 @@ func GetListBlob(containerURL azblob.ContainerURL) [][]azblob.BlobItemInternal {
 		results = append(results, listBlob.Segment.BlobItems)
 	}
 
-	return results
+	return results, nil
 }
